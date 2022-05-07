@@ -1,0 +1,4 @@
+-> Right now the code is somewhat ugly. It's will only work for selection sort. 
+-> Need to rework the design as I want to call the draw function each iteration of the loop...
+-> TODO:
+    1) Make it general to visiualize any sorting algorithm. So the only input to my program should be a function the does the sorting.
