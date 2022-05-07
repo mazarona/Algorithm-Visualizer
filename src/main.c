@@ -18,7 +18,6 @@ int diff;
 
 void visualize(void);
 int main(int argc, const char *argv[]) {
-    getchar();
     /***** Initialization (window and renderer) ******/
     SDL_Window *window;
     SDL_Renderer *renderer;
@@ -79,6 +78,10 @@ void visualize(void){
                 temp = arrayToSort[i];
                 arrayToSort[i] = arrayToSort[k];
                 arrayToSort[k] = temp;
+                allRects[k]->green = 0;
+                allRects[k]->red = 0;
+                allRects[k]->blue = 255;
+                allRects[k]->alpha = 255;
             }
             //update the state of the rects
             for(int i = 0; i < MAXLENGTH; i++){
@@ -87,7 +90,7 @@ void visualize(void){
             }
             currentTick = SDL_GetTicks();
             diff = currentTick - lastTick;
-            while (diff < 20){
+            while (diff < 2){
                 currentTick = SDL_GetTicks();
                 diff = currentTick - lastTick;
             }
