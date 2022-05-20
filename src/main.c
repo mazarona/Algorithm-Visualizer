@@ -17,6 +17,7 @@ int currentTick;
 int diff;
 
 void visualize(void);
+void setRectColor(Rectangle *, const char *);
 int main(int argc, const char *argv[]) {
   /***** Initialization (window and renderer) ******/
   SDL_Window *window;
@@ -55,54 +56,60 @@ int main(int argc, const char *argv[]) {
   printf("\n");
   /***** Start the Game *****/
   visualize();
-  startGame();
   return 0;
 }
 
 void visualize(void) {
-  // get the tick one time
-  lastTick = SDL_GetTicks();
   // selection sort
+  int swaps = 0;
   int temp;
   for (int i = 0; i < MAXLENGTH - 1; i++) {
     // highlight what the index i is pointing at in green.
+    setRectColor(allRects[i], "green");
     for (int k = i + 1; k < MAXLENGTH; k++) {
       // highlight what the index k is pointing at in red. and i in green.
-      allRects[i]->green = 255;
-      allRects[i]->red = 0;
-      allRects[i]->blue = 0;
-      allRects[i]->alpha = 255;
-      allRects[k]->green = 0;
-      allRects[k]->red = 255;
-      allRects[k]->blue = 0;
-      allRects[k]->alpha = 255;
+      setRectColor(allRects[k], "red");
       if (arrayToSort[k] < arrayToSort[i]) {
         temp = arrayToSort[i];
         arrayToSort[i] = arrayToSort[k];
         arrayToSort[k] = temp;
-        allRects[k]->green = 0;
-        allRects[k]->red = 0;
-        allRects[k]->blue = 255;
-        allRects[k]->alpha = 255;
-      }
-      // update the state of the rects
-      for (int i = 0; i < MAXLENGTH; i++) {
+        setRectColor(allRects[k], "blue");
+        // update the state of the swapped rects
         allRects[i]->height =
             (int)arrayToSort[i] / 100.0 * windowGlobal.windowHeight;
         allRects[i]->y = windowGlobal.windowHeight - allRects[i]->height;
+        allRects[k]->height =
+            (int)arrayToSort[k] / 100.0 * windowGlobal.windowHeight;
+        allRects[k]->y = windowGlobal.windowHeight - allRects[k]->height;
+        swaps++;
       }
-      currentTick = SDL_GetTicks();
-      diff = currentTick - lastTick;
-      while (diff < 2) {
-        currentTick = SDL_GetTicks();
-        diff = currentTick - lastTick;
-      }
-      lastTick = currentTick;
+      // update the state of the rects
       draw();
-      allRects[k]->green = 255;
-      allRects[k]->red = 255;
-      allRects[k]->blue = 255;
-      allRects[k]->alpha = 255;
+      setRectColor(allRects[k], "white");
     }
+  }
+  printf("Number of swaps: %d\n", swaps);
+}
+void setRectColor(Rectangle *rect, const char *color) {
+  if (!strcmp(color, "red")) {
+    rect->red = 255;
+    rect->blue = 0;
+    rect->green = 0;
+    rect->alpha = 255;
+  } else if (!strcmp(color, "blue")) {
+    rect->red = 0;
+    rect->blue = 255;
+    rect->green = 0;
+    rect->alpha = 255;
+  } else if (!strcmp(color, "green")) {
+    rect->red = 0;
+    rect->blue = 0;
+    rect->green = 255;
+    rect->alpha = 255;
+  } else if (!strcmp(color, "white")) {
+    rect->red = 255;
+    rect->blue = 255;
+    rect->green = 255;
+    rect->alpha = 255;
   }
 }
